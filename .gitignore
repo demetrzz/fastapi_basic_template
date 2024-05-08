@@ -1,0 +1,7 @@
+venv
+.venv
+.pytest_cache
+.idea
+__pycache__
+app.egg-info
+task_manager.egg-info

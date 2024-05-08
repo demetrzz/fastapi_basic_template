@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=69.5.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[project]
+name = "task_manager"
+version = "0.0.1"
+
+description = "FastAPI task manager"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy[asyncio]",
+    "alembic",
+    "asyncpg",
+    "python-jose",
+    "passlib",
+    "python-multipart",
+    "dishka",
+    "fastapi-users[sqlalchemy]",
+]
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "httpx"
+]
+lint = [
+    "ruff",
+]
+
+[tool.ruff]
+# Set the maximum line length to 79.
+line-length = 79
+
+[tool.ruff.lint]
+# Add the `line-too-long` rule to the enforced rule set.
+extend-select = ["E501"]
