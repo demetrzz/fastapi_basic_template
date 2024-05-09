@@ -25,7 +25,7 @@ tasks_router = APIRouter(route_class=DishkaRoute)
 async def get_tasks(
     database: FromDishka[DatabaseGateway],
     current_user: User = Depends(current_active_user),
-) -> list:
+) -> list[TaskBase]:
     try:
         tasks = await get_users_tasks(database, current_user.id)
     except InvalidTask:

@@ -1,6 +1,6 @@
-# TaskManager
+# Fastapi-template
 
-## API для приложения - менеджмента задач
+## Базовый шаблон для FastAPI приложения
 
 ### Стек технологий:
 - Python
@@ -20,7 +20,7 @@ pip install -e .
 
 ### Настроить env:
 ```bash
-export DB_URI=postgresql+asyncpg://user_name:testpassword@localhost/task_manager
+export DB_URI=postgresql+asyncpg://user_name:testpassword@localhost/db_name
 export SECRET_KEY=your_key
 export ALGORITHM=your_sha_algorithm
 export ACCESS_TOKEN_EXPIRES=seconds
@@ -33,4 +33,12 @@ alembic upgrade head
 
 ```bash
 uvicorn --factory --reload task_manager.main:create_app
+```
+
+### Тесты:
+
+```bash
+export TEST_USER_UUID=test_user_uuid
+export TEST_USER_EMAIL=test_user_email
+pytest
 ```
