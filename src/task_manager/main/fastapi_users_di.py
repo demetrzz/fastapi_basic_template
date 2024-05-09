@@ -10,7 +10,7 @@ from fastapi_users.authentication import (
 )
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 
-from task_manager.domain.models import User
+from task_manager.database.models import User
 from task_manager.main.config import load_config, Config
 from task_manager.main.di_provider import get_user_db
 
@@ -22,21 +22,29 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = config.jwt_secret
     verification_token_secret = config.jwt_secret
 
-    async def on_after_register(self, user: User, request: Optional[Request] = None):
+    async def on_after_register(
+        self, user: User, request: Optional[Request] = None
+    ):
         print(f"User {user.id} has registered.")
 
     async def on_after_forgot_password(
         self, user: User, token: str, request: Optional[Request] = None
     ):
-        print(f"User {user.id} has forgot their password. Reset token: {token}")
+        print(
+            f"User {user.id} has forgot their password. Reset token: {token}"
+        )
 
     async def on_after_request_verify(
         self, user: User, token: str, request: Optional[Request] = None
     ):
-        print(f"Verification requested for user {user.id}. Verification token: {token}")
+        print(
+            f"Verification requested for user {user.id}. Verification token: {token}"
+        )
 
 
-async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
+async def get_user_manager(
+    user_db: SQLAlchemyUserDatabase = Depends(get_user_db),
+):
     yield UserManager(user_db)
 
 
@@ -44,7 +52,9 @@ bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
 def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=config.jwt_secret, lifetime_seconds=config.token_expires)
+    return JWTStrategy(
+        secret=config.jwt_secret, lifetime_seconds=config.token_expires
+    )
 
 
 auth_backend = AuthenticationBackend(

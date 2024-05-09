@@ -14,14 +14,6 @@ class UoW(Protocol):
 
 class DatabaseGateway(ABC):
     @abstractmethod
-    async def add_user(self, user):
-        raise NotImplementedError
-
-    @abstractmethod
-    async def query_user_by_username(self, username: str):
-        raise NotImplementedError
-
-    @abstractmethod
     async def add_one_task(self, task, user_id: UUID_ID):
         raise NotImplementedError
 

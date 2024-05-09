@@ -39,5 +39,5 @@ def load_config() -> Config:
         db_uri=db_uri,
         jwt_secret=jwt_secret,
         sha_algorithm=sha_algorithm,
-        token_expires=token_expires
+        token_expires=token_expires,
     )

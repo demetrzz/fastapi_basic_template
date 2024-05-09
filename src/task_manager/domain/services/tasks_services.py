@@ -1,7 +1,7 @@
 from fastapi_users_db_sqlalchemy import UUID_ID
 
+from task_manager.database.protocols.database import DatabaseGateway, UoW
 from task_manager.domain.exceptions import InvalidTask, NoPermission
-from task_manager.adapters.protocols.database import DatabaseGateway, UoW
 from task_manager.domain.schemas.task_schemas import (
     TaskAdd,
     TaskBase,

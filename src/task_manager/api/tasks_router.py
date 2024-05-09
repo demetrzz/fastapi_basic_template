@@ -2,7 +2,8 @@ from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter, HTTPException, Depends
 
-from task_manager.domain.models import User
+from task_manager.database.models import User
+from task_manager.database.protocols.database import DatabaseGateway, UoW
 from task_manager.domain.schemas.task_schemas import (
     TaskAdd,
     TaskCompletion,
@@ -16,7 +17,6 @@ from task_manager.domain.services.tasks_services import (
     NoPermission,
 )
 from task_manager.main.fastapi_users_di import current_active_user
-from task_manager.adapters.protocols.database import DatabaseGateway, UoW
 
 tasks_router = APIRouter(route_class=DishkaRoute)
 
@@ -51,7 +51,7 @@ async def edit_task_completion(
     uow: FromDishka[UoW],
     id: int,
     task: TaskCompletion,
-    current_user: User = Depends(current_active_user)
+    current_user: User = Depends(current_active_user),
 ) -> TaskBase:
     try:
         task = await update_task(database, uow, current_user.id, id, task)
