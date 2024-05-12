@@ -13,6 +13,10 @@
 - dishka
 - fastapi-users
 - docker
+- poetry
+- redis
+- celery
+- flower
 
 ### Запуск:
 Создать .env и заполнить используя пример

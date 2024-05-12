@@ -7,7 +7,9 @@ async def test_get_tasks(client, test_user, auth_backend):
     headers = {"Authorization": f"Bearer {token}"}
 
     response = client.get("/tasks", headers=headers)
-    assert response.status_code == 200, f"Unexpected status code: {response.status_code}, content: {response.content}"
+    assert (
+        response.status_code == 200
+    ), f"Unexpected status code: {response.status_code}, content: {response.content}"
     tasks = response.json()
     assert len(tasks) == 5
     for i in range(5):

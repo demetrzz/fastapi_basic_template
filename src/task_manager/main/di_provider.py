@@ -1,15 +1,12 @@
 from typing import AsyncIterable
 
 from dishka import Provider, Scope, provide
-from fastapi import Depends
-from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
     AsyncSession,
     async_sessionmaker,
 )
 
-from task_manager.database.models import User
 from task_manager.database.protocols.database import DatabaseGateway, UoW
 from task_manager.database.sqlalchemy_db.gateway import SqlaGateway
 from task_manager.main.config import load_config
@@ -33,10 +30,6 @@ async def get_async_session() -> AsyncIterable[AsyncSession]:
     session_maker = await create_async_session_maker()
     async with session_maker() as session:
         yield session
-
-
-async def get_user_db(session: AsyncSession = Depends(get_async_session)):
-    yield SQLAlchemyUserDatabase(session, User)
 
 
 class CoreProvider(Provider):

@@ -8,7 +8,11 @@ import pytest
 import pytest_asyncio
 from dishka import Provider, Scope, provide, make_async_container
 from dishka.integrations.fastapi import setup_dishka
-from fastapi_users.authentication import JWTStrategy, BearerTransport, AuthenticationBackend
+from fastapi_users.authentication import (
+    JWTStrategy,
+    BearerTransport,
+    AuthenticationBackend,
+)
 from fastapi_users.schemas import BaseUser
 from fastapi_users_db_sqlalchemy import UUID_ID
 from starlette.testclient import TestClient
@@ -19,8 +23,8 @@ from task_manager.main import create_app
 from task_manager.main.di_provider import get_async_session
 from task_manager.main.fastapi_users_di import config
 
-USER_ID = uuid.UUID(os.getenv('TEST_USER_UUID'))
-USER_EMAIL = os.getenv('TEST_USER_EMAIL')
+USER_ID = uuid.UUID(os.getenv("TEST_USER_UUID"))
+USER_EMAIL = os.getenv("TEST_USER_EMAIL")
 
 
 class MockCoreProvider(Provider):
@@ -30,8 +34,15 @@ class MockCoreProvider(Provider):
     async def new_gateway(self) -> DatabaseGateway:
         gateway = AsyncMock()
         mock_tasks: List[TaskBase] = [
-            TaskBase(id=i, title=f"Task {i}", completed=bool(i % 2), author_id=USER_ID,
-                     assignee_id=str(uuid4())) for i in range(5)]
+            TaskBase(
+                id=i,
+                title=f"Task {i}",
+                completed=bool(i % 2),
+                author_id=USER_ID,
+                assignee_id=str(uuid4()),
+            )
+            for i in range(5)
+        ]
         gateway.get_tasks_by_user_id = AsyncMock(return_value=mock_tasks)
         yield gateway
 

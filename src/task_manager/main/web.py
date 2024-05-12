@@ -1,3 +1,4 @@
+import uvicorn
 from dishka import make_async_container, Scope
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
@@ -19,3 +20,14 @@ def create_app() -> FastAPI:
     container = make_async_container(provider)
     setup_dishka(container, app)
     return app
+
+
+async def run_api():
+    app = create_app()
+    config = uvicorn.Config(
+        app,
+        host="0.0.0.0",
+        port=8000,
+    )
+    server = uvicorn.Server(config)
+    await server.serve()

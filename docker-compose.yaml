@@ -1,7 +1,7 @@
 services:
   api:
     build: .
-    command: sh -c "uvicorn --factory --reload --host 0.0.0.0 --port 8000 task_manager.main:create_app"
+    command: sh -c "python -Om task_manager"
     restart: unless-stopped
     expose:
       - "8000"
@@ -9,6 +9,10 @@ services:
       - "8000:8000"
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      celery:
         condition: service_healthy
     env_file:
       - .env
@@ -24,9 +28,9 @@ services:
     ports:
       - "127.0.0.1:15432:5432"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       interval: 10s
-      timeout: 5s
+      timeout: 60s
       retries: 5
   postgres_migration:
     build: .
@@ -39,4 +43,44 @@ services:
     volumes:
       - ./alembic.ini:/app/alembic.ini:ro
       - ./src/task_manager/database/sqlalchemy_db/migrations:/app/src/task_manager/database/sqlalchemy_db/migrations:ro
+    working_dir: /app
     command: ["python", "-m", "alembic", "upgrade", "head"]
+  redis:
+    image: redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+    expose:
+      - '6379'
+    ports:
+      - '127.0.0.1:16379:6379'
+  celery:
+    build: .
+    restart: unless-stopped
+    command: celery -A task_manager.main.celery_worker.celery_app worker -l info
+    env_file:
+      - .env
+    volumes:
+      - ./src/task_manager/main:/app/src/task_manager/main:ro
+    healthcheck:
+      test: ["CMD-SHELL", "celery -b redis://redis:6379/0 inspect ping -d celery@$$HOSTNAME"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+    depends_on:
+      redis:
+        condition: service_healthy
+  flower:
+    build: .
+    restart: unless-stopped
+    command: celery --broker=redis://redis:6379/0 flower --port=5555
+    ports:
+      - "127.0.0.1:15555:5555"
+    env_file:
+      - .env
+    depends_on:
+      celery:
+        condition: service_healthy

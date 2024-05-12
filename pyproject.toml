@@ -1,46 +1,46 @@
-[build-system]
-requires = ["setuptools>=69.5.1"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-package-dir = { "" = "src" }
-
-[project]
+[tool.poetry]
 name = "task_manager"
-version = "0.0.1"
+version = "0.1.0"
+description = ""
+authors = ["demetrzz <johndoe@example.com>"]
+readme = "README.md"
 
-description = "FastAPI task manager"
-requires-python = ">=3.11"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Apache Software License",
-    "Operating System :: OS Independent",
-]
-dependencies = [
-    "fastapi",
-    "uvicorn",
-    "sqlalchemy[asyncio]",
-    "alembic",
-    "asyncpg",
-    "python-jose",
-    "passlib",
-    "python-multipart",
-    "dishka",
-    "fastapi-users[sqlalchemy]",
-]
-[project.optional-dependencies]
-test = [
-    "pytest",
-    "httpx"
-]
-lint = [
-    "ruff",
-]
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.0"
+uvicorn = "^0.29.0"
+SQLAlchemy = {extras = ["asyncio"], version = "^2.0.30"}
+alembic = "^1.13.1"
+asyncpg = "^0.29.0"
+python-jose = "^3.3.0"
+passlib = "^1.7.4"
+python-multipart = "^0.0.9"
+dishka = "^1.1.1"
+fastapi-users = {extras = ["sqlalchemy"], version = "^13.0.0"}
+redis = "^5.0.4"
+celery = "^5.4.0"
+flower = "^2.0.1"
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.2.0"
+pytest-asyncio = "^0.23.6"
+httpx = "*"
+
+[tool.poetry.group.lint]
+optional = true
+
+[tool.poetry.group.lint.dependencies]
+ruff = "^0.4.2"
 
 [tool.ruff]
-# Set the maximum line length to 79.
 line-length = 79
 
 [tool.ruff.lint]
-# Add the `line-too-long` rule to the enforced rule set.
 extend-select = ["E501"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

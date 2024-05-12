@@ -22,7 +22,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from task_manager.database.models import (
+from src.task_manager.database.models import (
     metadata_obj as target_metadata,
 )
 

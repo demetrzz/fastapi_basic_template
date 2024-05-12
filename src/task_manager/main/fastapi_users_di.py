@@ -9,11 +9,11 @@ from fastapi_users.authentication import (
     JWTStrategy,
 )
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from task_manager.database.models import User
 from task_manager.main.config import load_config, Config
-from task_manager.main.di_provider import get_user_db
-
+from task_manager.main.di_provider import get_async_session
 
 config: Config = load_config()
 
@@ -40,6 +40,10 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         print(
             f"Verification requested for user {user.id}. Verification token: {token}"
         )
+
+
+async def get_user_db(session: AsyncSession = Depends(get_async_session)):
+    yield SQLAlchemyUserDatabase(session, User)
 
 
 async def get_user_manager(
